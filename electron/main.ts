@@ -1,5 +1,44 @@
-import { app, BrowserWindow, globalShortcut } from 'electron'
+import { app, BrowserWindow, globalShortcut, ipcMain } from 'electron'
 import path from 'node:path'
+const {keyboard, Key, clipboard} = require('@nut-tree/nut-js');
+
+async function pasteFromHistory(arg: string) {
+  
+      try
+      {
+        await clipboard.setContent(arg);
+        await keyboard.pressKey(Key.LeftControl, Key.V);
+    }
+    catch (error)
+    {
+      console.log("PASE FROM HISTORY ERROR ++++ ", error)
+    }
+}
+async function getClipboardText(arg: string) {
+  const tempWindow = new BrowserWindow({ show: false })  
+  await pasteFromHistory(arg)  
+  tempWindow.close()
+  // return text
+}
+console.log("Done")
+
+
+ipcMain.handle('close-me', async (event, arg) => {
+    
+  // Get window that sent the message
+  const window = BrowserWindow.fromWebContents(event.sender);  
+  console.log(arg)
+  if (window)
+  {
+    // Close the window 
+    getClipboardText(arg);
+    window.close();
+  }
+  // await pasteFromHistory();
+  console.log("OPIIUOIUIUOI")
+  
+});
+
 
 // The built directory structure
 //
@@ -23,6 +62,8 @@ function createWindow() {
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false
     },
   })
 
@@ -59,16 +100,17 @@ app.on('activate', () => {
 
 app.whenReady().then(() =>
 {
-  createWindow();
+  createWindow()
 
-  const shortcut = 'CommandOrControl+C'; 
+  // const shortcut = 'CommandOrControl+X'; 
 
-  // Register global shortcut listener    
-  globalShortcut.register(shortcut, () => {
+  // // Register global shortcut listener    
+  // globalShortcut.register(shortcut, () => {
     
-    // Open new window when shortcut pressed
-    let newWin = new BrowserWindow();  
+  //   // Open new window when shortcut pressed
+  //   pasteFromHistory();  
     
-  })
+  // })
 
 })
+

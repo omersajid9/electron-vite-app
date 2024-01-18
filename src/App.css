@@ -2,7 +2,7 @@
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .logo {
@@ -35,8 +35,97 @@
 
 .card {
   padding: 2em;
+  display: flex;
+  flex-direction: column;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+.container-paste
+{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-query-paste
+{
+  width: 60vw;
+  height: 10vh;
+  padding: 12px 20px; 
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+  color: black;
+}
+
+.container-copy
+{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-name-copy
+{
+  width: 60vw;
+  height: 10vh;
+  padding: 12px 20px; 
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+  color: black;
+}
+
+#myTextarea {
+  width: 60vw;
+  height: 40vh;
+  padding: 12px 20px; 
+  box-sizing: border-box;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+  font-size: 16px;
+  resize: none;
+  color: black;
+}
+
+
+
+
+
+/*TABLE STYLINE*/
+#dataTable {
+  /* border-collapse: collapse; */
+  width: 80%;
+  margin: 25px auto;
+  padding:10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+#dataTable th, #dataTable td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+#dataTable tr {
+  border-bottom: 1px solid #dddddd; 
+}
+
+#dataTable th {
+  background-color: #009879;
+  color: #ffffff;
+  width: 100%;
 }
