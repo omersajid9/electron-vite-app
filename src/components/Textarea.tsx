@@ -1,43 +1,53 @@
-import React, {   } from 'react'
+import React, { forwardRef, useCallback  } from 'react'
 
 interface TextareaProps {
     text: string;
-    onTextSelect: (text: string) => void;  
+    onTextSelect: (text: [number, number]) => void;  
+    checkValidHighlight: (selectionStart: number, selectionEnd: number) => void;
     placeholder: string;
+    variableData: VariableData[];
   }
-  
-  const Textarea: React.FC<TextareaProps> = ({ text, onTextSelect ,placeholder }) => {
-  
-    // const wrapHighlight = useCallback(() => {
-    //   const highlight = text
-      
-    //   onTextSelect(
-    //     highlight
-    //     // text.substring(0, start) +  
-    //     // `{<mark>${highlight}</mark>}` +
-    //     // text.substring(end)
-    //   );
-    // }, [text, onTextSelect]);
 
-    // const handleMouseUp = useCallback(() => { 
-    //   const textarea = document.getElementById('myTextarea');
-    //   const selectionStart = textarea?.selectionStart;
-    //   const selectionEnd = textarea?.selectionEnd;
+  interface VariableData
+{
+  varName: string,
+  index: number,
+  text: string
+}
+
+  
+  const Textarea= forwardRef<HTMLTextAreaElement, TextareaProps>(({ variableData, text, onTextSelect , checkValidHighlight, placeholder  }, ref) => {
+  
+    const wrapHighlight = useCallback((start: number, end: number) => {
+      const highlight = text.substring(start, end)
       
-    //   if (selectionStart !== null && selectionEnd !== null) {
-    //     wrapHighlight(selectionStart, selectionEnd);
-    //   }
-    // }, [wrapHighlight]);
+      onTextSelect([start, end]);
+    }, [text, onTextSelect]);
+
+
+    const handleMouseUp = useCallback(() => { 
+      const textarea = document.getElementById('myTextarea');
+      const selectionStart = textarea?.selectionStart;
+      const selectionEnd = textarea?.selectionEnd;
+
+      console.log("FUNCTION ENTER", selectionStart)
+      checkValidHighlight(selectionStart, selectionEnd);
+      
+      if (selectionStart !== null && selectionEnd !== null) {
+        wrapHighlight(selectionStart, selectionEnd);
+      }
+    }, [wrapHighlight, variableData, checkValidHighlight]);
     
     return (
       <textarea 
         id="myTextarea"
         value={text}
-        onChange={(e)=>onTextSelect(e.target.value)}
+        ref={ref}
+        // onChange={(e)=>onTextSelect(e.target.value)}
         placeholder={placeholder}
-        // onMouseUp={onTextSelect}  
+        onMouseUp={handleMouseUp}  
       />
     );
-  }
+  })
   
   export default Textarea;

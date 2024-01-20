@@ -1,38 +1,31 @@
 // import React, { useState } from 'react'
 import './App.css'
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import { ipcRenderer } from 'electron';
 
 import Copy from './pages/copy'
 import Paste from './pages/paste'
 
-
+import "tailwindcss/tailwind.css";
 
 function App() {
+  const nav = useNavigate();
 
+  ipcRenderer.on('Open-Copy', () => {
+    console.log("YO COPY PRESSED BROOO")
+    nav("/copy") // prints 'some data'
+  })  
+
+  ipcRenderer.on('Open-Paste', () => {
+    nav("/paste") // prints 'some data'
+  })  
+
+  
   return (
-    <>
-      <div className="card">
-      <Copy/>
-        <Paste/>
-        {/* <input 
-          type = "text"
-          onChange={(e) => setSnippet(e.target.value)}
-          value = {snippet}
-          // onKeyPress={handleSubmit}
-          /> */}
-        <br/>
-        {/* <button onClick={() => readGet()}>
-          Retrive Data
-        </button> */}
-        {/* <button onClick={() => getFromClipboard()}>
-          Retrive Copy
-        </button> */}
-        {/* {count.map(item => (
-        <div key={item} className="card">
-          <p>{item}</p>
-        </div>
-      ))} */}
-      </div>
-    </>
+      <Routes>
+        <Route path="/copy" element={<Copy />} />
+        <Route path="/paste" element={<Paste />} />
+      </Routes>
   )
 }
 
