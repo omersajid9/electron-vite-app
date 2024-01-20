@@ -102,9 +102,9 @@ app.whenReady().then(() =>
 {
   createWindow()
 
-  // const shortcut = 'CommandOrControl+X'; 
+  const shortcut = 'CommandOrControl+X'; 
 
-  // // Register global shortcut listener    
+  // Register global shortcut listener    
   // globalShortcut.register(shortcut, () => {
     
   //   // Open new window when shortcut pressed

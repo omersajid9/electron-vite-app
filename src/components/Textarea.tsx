@@ -18,7 +18,7 @@ interface TextareaProps {
     //     // text.substring(end)
     //   );
     // }, [text, onTextSelect]);
-     
+
     // const handleMouseUp = useCallback(() => { 
     //   const textarea = document.getElementById('myTextarea');
     //   const selectionStart = textarea?.selectionStart;

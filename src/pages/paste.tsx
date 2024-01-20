@@ -7,6 +7,7 @@ interface Query {
 }
 
 
+
 function paste()
 {
     const [query, setQuery] = useState("");
@@ -63,7 +64,7 @@ function paste()
             Retrive Data
           </button>
 
-          <table id="dataTable">
+        <table id="dataTable">
 
                 {count.map((item: {key:string, value: string})  => (
                     <>
