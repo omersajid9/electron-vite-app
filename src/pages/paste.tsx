@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios, { AxiosResponse, AxiosResponseHeaders } from 'axios';
 import { ipcRenderer } from 'electron'
 
@@ -100,26 +100,47 @@ function paste()
         }
     }
 
-    
-
-    const handleSubmit = async (event: React.KeyboardEvent<HTMLInputElement>) => 
+    useEffect(()=>
     {
-        if (event.key == "Enter")
-        {
+        handleSubmit();
+        console.log("SNIPPET", snippet)
+    }, [query])
+
+
+    const handleSubmit = async () => 
+    {        
             const queryData: Query =  {
                 "name": query
             };
-            const response = await axios.get("http://localhost:3000/search", {params: queryData});
-            // console.log(response.data)
+            const response = await axios.get("http://localhost:3000/search", {params: queryData.name.length > 0 ? queryData : { "name": "*"}});
+            console.log("YOOOO", response.data)
+            const data = response.data.hits[0]?.document;
+
+            if (data)
+            {
+                console.log("DAATATATA", data)
+                const res: ResponseData[] = [];
+                response.data.hits.forEach((a: any)=> {res.push(a.document);});
+                setAllSnippets(res)
+
+
+
+                setCurrentSnippet(data);
+                setSnippet(data.value);
+                modifyText(data)
+            }
+            else
+            {
+                console.log("ELSESESESE", data)
+                setAllSnippets([])
+                setCurrentSnippet(undefined);
+                setSnippet("");
+            }
+            
+            // // await axios.post<FormData>('http://localhost:3000/add', queryData);
+            // // setSnippet("");
+            // // setName("");
             // navigator.clipboard.writeText(response.data);
-            setCurrentSnippet(response.data);
-            setSnippet(response.data.value);
-            // await axios.post<FormData>('http://localhost:3000/add', queryData);
-            // setSnippet("");
-            // setName("");
-            console.log("ASDUSADSAUIDSA")
-            modifyText(response.data)
-        }
     }
 
     const modifyText = (data: ResponseData) =>
@@ -135,6 +156,7 @@ function paste()
             setSnippet(origString)
 
             console.log("SORTED", vardata);
+            return origString
         }
     }
 
@@ -153,29 +175,31 @@ function paste()
         await ipcRenderer.invoke('close-me', formatString()).then((result) => console.log("INVOKED", result)).catch((error) => console.log(error));
     }
 
-    useEffect(()=>
-    {
-        readGet();
-    }, [])
+    // useEffect(()=>
+    // {
+    //     readGet();
+    // }, [])
 
-    const readGet = () =>
-    {
-        axios.get<ResponseData[]>("http://localhost:3000")
-            .then((response: AxiosResponse<ResponseData[]>) =>
-            {
-                // console.log(response.data)
-            setAllSnippets(response.data);
-            // return null;
-            })
-    }
-
-
+    // const readGet = () =>
+    // {
+    //     axios.get<ResponseData[]>("http://localhost:3000")
+    //         .then((response: AxiosResponse<ResponseData[]>) =>
+    //         {
+    //             // console.log(response.data)
+    //         setAllSnippets(response.data);
+    //         // return null;
+    //         })
+    // }
     return (
         <>
         <div className="container-paste">
-            <input className='input-query-paste' value={query} onChange={(e)=>setQuery(e.target.value)} onKeyPress={handleSubmit} placeholder='Search for snippets'/>
-            <div><h4 onClick={handleClick} >{snippet}</h4></div>
-            {inputStates.array.map((vardata: InputState, index: number) =>
+            <input className='input-query-paste' value={query} onChange={(e)=>setQuery(e.target.value)} placeholder='Search for snippets'/>
+            {/* <div><h4 onClick={handleClick} >{snippet}</h4></div> */}
+
+
+
+
+            {/* {inputStates.array.map((vardata: InputState, index: number) =>
             (
                 <>
                 <input 
@@ -186,16 +210,16 @@ function paste()
                     placeholder={vardata.varName + "(" + vardata.origText + ")"}
                 />  
                 </>
-            ))}
+            ))} */}
 
 
 
 
 
 
-            <button onClick={() => readGet()}>
+            {/* <button onClick={() => readGet()}>
             Retrive Data
-          </button>
+          </button> */}
 
         <table id="dataTable">
 
@@ -214,6 +238,7 @@ function paste()
                             </pre>
                         </th>
                     </tr>
+                    <br/>
                     </>
                     // <div key={item} className="card">
                     // <p>{item}</p>

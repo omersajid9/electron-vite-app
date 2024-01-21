@@ -1,13 +1,19 @@
 import { AxiosRequestHeaders, AxiosResponseHeaders } from "axios";
+import express, {Request, Response} from 'express'
+// const express = require('express');
+import mongoose from 'mongoose';
+import {insertDocumentT, searchDocumentT} from './db/typesenseindex'
+import { Db, MongoClient } from "mongodb";
 
-const express = require('express');
-const mongoose  = require("mongoose");
-
+// main().catch(error=>console.log("ERROR", error));
 
 const app = express();
 mongoose.connect('mongodb://localhost:27017/cavi', {
-    useNewUrlParser: true
+    // replicaSet:'r0'
+    // useNewUrlParser: true
 })
+
+
 
 interface FormData
 {
@@ -53,12 +59,15 @@ app.get('/search', async (req: any, res: any) =>
     var query = req.query.name;
     try
     {
-        const search = await searchDocument(query);
+        // res.send(searchDocumentT(query))
+        const search = await searchDocumentT(query);
+        console.log(search)
         res.send(search);
     }
     catch (error)
     {
-        res.status(500).send({error}); 
+        const msg = "YOOOOO THIS IS TYPESEBSE ERROR"
+        res.status(500).send({error, msg}); 
     }
 })
 
@@ -67,6 +76,7 @@ app.post('/add', (req: any, res: any) =>
     var response = req.body;
     var reponsedata: FormData = {key: response.key, value: response.value, variableData: response.variableData}
     insertDocument(reponsedata);
+    insertDocumentT(reponsedata);
     res.sendStatus(200);
 })
 
@@ -92,7 +102,7 @@ const allDocuments = async () =>
     try {
         const arr : FormData[] = [];
         const result = await KeyValue.find({});
-        result.forEach((z:FormData)=>
+        result.forEach((z:any)=>
         {
             arr.push({key: z.key , value: z.value, variableData: z.variableData})
         })
