@@ -3,7 +3,6 @@ import path from 'node:path'
 const {keyboard, Key} = require('@nut-tree/nut-js');
 
 
-
 async function pasteFromHistory(arg: string) {
   
       try
@@ -126,7 +125,7 @@ app.whenReady().then(() =>
 
   // // Register global shortcut listener    
   globalShortcut.register(shortcut, () => {
-    console.log("YO C PRESSED")
+    console.log("YO C PRESSED", clipboard.readText('selection'))
     main.show();
     
     // Open new window when shortcut pressed
